@@ -1,10 +1,12 @@
 <?php
 /**
  * Plugin Name: BambooHR Applicant Sync
- * Plugin URI: https://github.com/jithran/bamboohr-applicant-sync
- * Description: Synchroniseert sollicitatie formulieren met BambooHR
+ * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
+ * Description: Add an applicant form and sync with BambooHR
  * Version: 1.0.0
  * Author: Jithran Sikken
+ * Author URI: https://www.mediavisie.nl
+ * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  */
 
 // Voorkom directe toegang
