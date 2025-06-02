@@ -1,14 +1,33 @@
 #bamboohr-application-form {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 20px;
     background: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #bamboohr-form .form-group {
     margin-bottom: 20px;
+}
+
+#bamboohr-form .form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#bamboohr-form .form-row .form-group {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+#bamboohr-form .form-group.half {
+    flex: 1;
+}
+
+#bamboohr-form .form-group.third {
+    flex: 1;
 }
 
 #bamboohr-form label {
@@ -21,7 +40,10 @@
 #bamboohr-form input[type="text"],
 #bamboohr-form input[type="email"],
 #bamboohr-form input[type="tel"],
+#bamboohr-form input[type="url"],
+#bamboohr-form input[type="date"],
 #bamboohr-form input[type="file"],
+#bamboohr-form select,
 #bamboohr-form textarea {
     width: 100%;
     padding: 10px;
@@ -29,6 +51,11 @@
     border-radius: 4px;
     font-size: 14px;
     box-sizing: border-box;
+}
+
+#bamboohr-form select {
+    height: 42px;
+    background-color: white;
 }
 
 #bamboohr-form textarea {
@@ -45,6 +72,7 @@
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s;
+    width: 100%;
 }
 
 #bamboohr-form button[type="submit"]:hover {
@@ -72,6 +100,18 @@
     border: 1px solid #f5c6cb;
     border-radius: 4px;
     margin-top: 15px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #bamboohr-form .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    #bamboohr-form .form-row .form-group {
+        margin-bottom: 20px;
+    }
 }
 
 /* Admin styles */
