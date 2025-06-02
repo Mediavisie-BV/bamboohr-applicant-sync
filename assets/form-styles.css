@@ -1,0 +1,118 @@
+#bamboohr-application-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#bamboohr-form .form-group {
+    margin-bottom: 20px;
+}
+
+#bamboohr-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+#bamboohr-form input[type="text"],
+#bamboohr-form input[type="email"],
+#bamboohr-form input[type="tel"],
+#bamboohr-form input[type="file"],
+#bamboohr-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#bamboohr-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+#bamboohr-form button[type="submit"] {
+    background-color: #0073aa;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+#bamboohr-form button[type="submit"]:hover {
+    background-color: #005a87;
+}
+
+#bamboohr-form button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+/* Admin styles */
+.bamboohr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.bamboohr-table th,
+.bamboohr-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.bamboohr-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.status-success {
+    color: #155724;
+    background-color: #d4edda;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-failed {
+    color: #721c24;
+    background-color: #f8d7da;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.status-pending {
+    color: #856404;
+    background-color: #fff3cd;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
