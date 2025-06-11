@@ -274,7 +274,7 @@ class BambooHRApplicantSync {
 
                 <div class="form-group">
                     <label for="desiredSalary">Desired Salary</label>
-                    <input type="text" id="desiredSalary" name="desiredSalary" placeholder="e.g., $50,000 or Negotiable">
+                    <input type="text" id="desiredSalary" name="desiredSalary" placeholder="">
                 </div>
 
                 <!-- URLs -->
