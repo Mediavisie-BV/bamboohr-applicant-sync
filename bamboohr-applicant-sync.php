@@ -206,6 +206,17 @@ class BambooHRApplicantSync {
             'job_id' => ''
         ), $atts);
 
+        // Als geen job_id is opgegeven, probeer het op te halen van de huidige post
+        if (empty($atts['job_id'])) {
+            global $post;
+            if ($post) {
+                $bamboohr_id = get_post_meta($post->ID, 'bamboohr_id', true);
+                if (!empty($bamboohr_id)) {
+                    $atts['job_id'] = $bamboohr_id;
+                }
+            }
+        }
+
         ob_start();
         ?>
         <div id="bamboohr-application-form">
