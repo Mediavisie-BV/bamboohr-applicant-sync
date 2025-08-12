@@ -3,7 +3,7 @@
  * Plugin Name: BambooHR Applicant Sync
  * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  * Description: Add an applicant form and sync with BambooHR, including job vacancy synchronization
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Jithran Sikken
  * Author URI: https://www.mediavisie.nl
  * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Plugin constanten
 define('BAMBOOHR_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BAMBOOHR_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('BAMBOOHR_PLUGIN_VERSION', '1.2.1');
+define('BAMBOOHR_PLUGIN_VERSION', '1.2.2');
 
 class BambooHRApplicantSync {
 
@@ -332,8 +332,8 @@ class BambooHRApplicantSync {
 
                 <!-- Additional Information -->
                 <div class="form-group">
-                    <label for="dateAvailable">Date Available</label>
-                    <input type="date" id="dateAvailable" name="dateAvailable">
+                    <label for="dateAvailable">Date Available *</label>
+                    <input type="date" id="dateAvailable" name="dateAvailable" required>
                 </div>
 
                 <div class="form-group">
@@ -348,8 +348,8 @@ class BambooHRApplicantSync {
                 </div>
 
                 <div class="form-group">
-                    <label for="linkedinUrl">LinkedIn Profile URL</label>
-                    <input type="url" id="linkedinUrl" name="linkedinUrl" placeholder="https://linkedin.com/in/">
+                    <label for="linkedinUrl">LinkedIn Profile URL *</label>
+                    <input type="url" id="linkedinUrl" name="linkedinUrl" placeholder="https://linkedin.com/in/" required>
                 </div>
 
                 <div class="form-group">
@@ -470,7 +470,7 @@ class BambooHRApplicantSync {
         }
 
         // BambooHR API endpoint
-        $url = "https://api.bamboohr.com/api/gateway.php/{$company_domain}/v1/applicants/";
+        $url = "https://{$company_domain}.bamboohr.com/api/v1/applicant_tracking/application";
 
         // Prepare API data
         $api_data = array(
@@ -515,10 +515,10 @@ class BambooHRApplicantSync {
         $response_code = wp_remote_retrieve_response_code($response);
         $response_body = wp_remote_retrieve_body($response);
 
-        if ($response_code === 201) {
+        if ($response_code === 200 || $response_code === 201) {
             // Success - extract applicant ID from response
             $response_data = json_decode($response_body, true);
-            $bamboohr_id = isset($response_data['id']) ? $response_data['id'] : 'unknown';
+            $bamboohr_id = isset($response_data['candidateId']) ? $response_data['candidateId'] : 'unknown';
 
             $this->update_sync_status($local_id, 'success', '', $bamboohr_id);
             return array('success' => true, 'bamboohr_id' => $bamboohr_id);
