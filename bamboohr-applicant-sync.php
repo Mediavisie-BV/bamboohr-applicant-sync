@@ -3,7 +3,7 @@
  * Plugin Name: BambooHR Applicant Sync
  * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  * Description: Add an applicant form and sync with BambooHR, including job vacancy synchronization
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: Jithran Sikken
  * Author URI: https://www.mediavisie.nl
  * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Plugin constanten
 define('BAMBOOHR_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BAMBOOHR_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('BAMBOOHR_PLUGIN_VERSION', '1.2.2');
+define('BAMBOOHR_PLUGIN_VERSION', '1.2.3');
 
 class BambooHRApplicantSync {
 
@@ -220,6 +220,8 @@ class BambooHRApplicantSync {
         ob_start();
         ?>
         <div id="bamboohr-application-form">
+            <div id="form-messages" style="margin-bottom:var(--wp--preset--spacing--40)"></div>
+
             <form id="bamboohr-form" enctype="multipart/form-data">
                 <?php wp_nonce_field('bamboohr_form_nonce', 'bamboohr_nonce'); ?>
 
@@ -321,8 +323,8 @@ class BambooHRApplicantSync {
 
                 <!-- File Uploads -->
                 <div class="form-group">
-                    <label for="resume">Resume/CV (PDF, DOC, DOCX) *</label>
-                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                    <label for="resume">Resume/CV (PDF, DOC, DOCX)</label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
                 </div>
 
                 <div class="form-group">
@@ -355,8 +357,6 @@ class BambooHRApplicantSync {
                 <div class="form-group">
                     <button type="submit" id="submit-btn">Submit Application</button>
                 </div>
-
-                <div id="form-messages"></div>
             </form>
         </div>
         <?php
@@ -414,19 +414,19 @@ class BambooHRApplicantSync {
         $local_id = $this->save_application_locally($form_data);
 
         if (!$local_id) {
-            wp_send_json_error('Error saving application');
+            wp_send_json_error('There was an error saving your application. Please try again later.');
             return;
         }
 
         // Try to sync with BambooHR
         $sync_result = $this->sync_with_bamboohr($local_id, $form_data);
 
-        if ($sync_result['success']) {
-            wp_send_json_success('Application submitted and synchronized successfully!');
-        } else {
+        //if ($sync_result['success']) {
+            wp_send_json_success('Thank you for your application');
+        /*} else {
             // Even with sync error, give success message (data is saved locally)
-            wp_send_json_success('Application received successfully! (Synchronization will be attempted later)');
-        }
+            wp_send_json_success('Thank you for your application');
+        }*/
     }
 
     private function handle_file_upload($file) {

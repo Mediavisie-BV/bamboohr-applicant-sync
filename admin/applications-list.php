@@ -17,7 +17,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Position</th>
+                <!--<th>Position</th>-->
                 <th>Location</th>
                 <th>Status</th>
                 <th>BambooHR ID</th>
@@ -33,7 +33,7 @@
                     <td><?php echo esc_html($app->first_name . ' ' . $app->last_name); ?></td>
                     <td><?php echo esc_html($app->email); ?></td>
                     <td><?php echo esc_html($app->phone_number); ?></td>
-                    <td><?php echo esc_html($app->position_applied); ?></td>
+                    <!--<td><?php /*echo esc_html($app->position_applied); */?></td>-->
                     <td><?php echo esc_html($app->city . ($app->city && $app->country ? ', ' : '') . $app->country); ?></td>
                     <td>
                             <span class="status-<?php echo $app->sync_status; ?>">

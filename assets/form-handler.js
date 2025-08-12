@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
     $('#bamboohr-form').on('submit', function(e) {
+        console.log('Form submission initiated');
         e.preventDefault();
 
         var $form = $(this);
@@ -32,6 +33,8 @@ jQuery(document).ready(function($) {
                 if (response.success) {
                     $messages.html('<div class="success-message">' + response.data + '</div>');
                     $form[0].reset(); // Reset form
+                    // hide the form when submission is successful
+                    $form.hide();
 
                     // Scroll to success message
                     $('html, body').animate({
@@ -79,12 +82,13 @@ jQuery(document).ready(function($) {
         }
 
         // Resume file validation
+        /*
         let resumeFile = $('#resume')[0].files[0];
         if (!resumeFile) {
             $messages.html('<div class="error-message">Please upload your resume.</div>');
             $('#resume').focus();
             isValid = false;
-        }
+        }*/
 
         return isValid;
     }
@@ -183,13 +187,19 @@ jQuery(document).ready(function($) {
         var $input = $(this);
         var url = $input.val().trim();
 
-        if (url && !url.match(/^https?:\/\//)) {
-            // If it looks like a LinkedIn URL, format it properly
-            if (url.includes('linkedin.com') || url.startsWith('linkedin.com')) {
-                if (!url.startsWith('linkedin.com')) {
-                    url = 'linkedin.com' + (url.startsWith('/') ? '' : '/') + url;
-                }
-                url = 'https://' + url;
+        if (url) {
+            // Ensure the URL starts with a valid LinkedIn URL
+            if (!url.match(/^https?:\/\/(www\.)?linkedin\.com/)) {
+                // show an error message if the LinkedIn URL is not valid above this input field
+                $('#form-messages').html('<div class="error-message">Please enter a valid LinkedIn URL starting with https://www.linkedin.com/</div>');
+                $input.focus();
+                $input.val('');
+                return false;
+            }
+
+            // Format the LinkedIn URL properly if needed
+            if (!url.startsWith('https://')) {
+                url = 'https://' + url.replace(/^http:\/\//, '');
                 $input.val(url);
             }
         }
