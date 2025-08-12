@@ -3,7 +3,7 @@
  * Plugin Name: BambooHR Applicant Sync
  * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  * Description: Add an applicant form and sync with BambooHR, including job vacancy synchronization
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Jithran Sikken
  * Author URI: https://www.mediavisie.nl
  * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Plugin constanten
 define('BAMBOOHR_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BAMBOOHR_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('BAMBOOHR_PLUGIN_VERSION', '1.2.0');
+define('BAMBOOHR_PLUGIN_VERSION', '1.2.1');
 
 class BambooHRApplicantSync {
 
@@ -103,7 +103,7 @@ class BambooHRApplicantSync {
             $wpdb->query("ALTER TABLE {$table_name} CHANGE cover_letter cover_letter_file varchar(500)");
         }
 
-        // Creëer vacancy sync table
+        // Creï¿½er vacancy sync table
         $this->create_vacancy_sync_table();
     }
 
@@ -149,7 +149,7 @@ class BambooHRApplicantSync {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
-        // Creëer vacancy sync table
+        // Creï¿½er vacancy sync table
         $this->create_vacancy_sync_table();
 
         // Voeg opties toe
@@ -958,6 +958,7 @@ class BambooHRApplicantSync {
             $vacancy['share_url'] = $job['jobOpeningShareUrl'] ?? '';
             $vacancy['location_type'] = $job['locationType'] ?? '0';
             $vacancy['location_city'] = $job['location']['city'] ?? '';
+            $vacancy['location_country'] = $job['location']['addressCountry'] ?? '';
 
             // Parse location
             if (isset($job['location'])) {
@@ -1111,6 +1112,7 @@ class BambooHRApplicantSync {
             'department' => $vacancy_detail['department'],
             'location' => $vacancy_detail['location'],
             'location_city' => $vacancy_detail['location_city'],
+            'location_country' => $vacancy_detail['location_country'],
             'status' => $vacancy_detail['status'],
             'employment_status' => $vacancy_detail['employment_status'],
             'date_posted' => $vacancy_detail['date_posted'],
@@ -1134,7 +1136,7 @@ class BambooHRApplicantSync {
 
                 $result['updated'] = true;
             } else {
-                // Creëer nieuwe post
+                // Creï¿½er nieuwe post
                 $post_id = wp_insert_post($post_data);
 
                 if (is_wp_error($post_id)) {
@@ -1282,7 +1284,7 @@ class BambooHRApplicantSync {
             return;
         }
 
-        // Test één detail pagina
+        // Test ï¿½ï¿½n detail pagina
         if (!empty($vacancies)) {
             $test_vacancy = $vacancies[0];
             $detail_url = $careers_base_url . '/' . $test_vacancy['id'] . '/detail';

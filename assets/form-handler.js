@@ -54,15 +54,15 @@ jQuery(document).ready(function($) {
 
     // Form validation function
     function validateForm() {
-        var isValid = true;
-        var $messages = $('#form-messages');
+        let isValid = true;
+        let $messages = $('#form-messages');
 
         // Required field validation
-        var requiredFields = ['firstName', 'lastName', 'email', 'position_applied'];
+        let requiredFields = ['firstName', 'lastName', 'email'];
 
         requiredFields.forEach(function(fieldName) {
             var $field = $('#' + fieldName);
-            if (!$field.val().trim()) {
+            if ($field.length !== 0 && !$field.first().val().trim()) {
                 $messages.html('<div class="error-message">Please fill in all required fields.</div>');
                 $field.focus();
                 isValid = false;
@@ -71,7 +71,7 @@ jQuery(document).ready(function($) {
         });
 
         // Email validation
-        var email = $('#email').val();
+        let email = $('#email').val();
         if (email && !isValidEmail(email)) {
             $messages.html('<div class="error-message">Please enter a valid email address.</div>');
             $('#email').focus();
@@ -79,7 +79,7 @@ jQuery(document).ready(function($) {
         }
 
         // Resume file validation
-        var resumeFile = $('#resume')[0].files[0];
+        let resumeFile = $('#resume')[0].files[0];
         if (!resumeFile) {
             $messages.html('<div class="error-message">Please upload your resume.</div>');
             $('#resume').focus();
