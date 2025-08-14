@@ -3,7 +3,7 @@
  * Plugin Name: BambooHR Applicant Sync
  * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  * Description: Add an applicant form and sync with BambooHR, including job vacancy synchronization
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Jithran Sikken
  * Author URI: https://www.mediavisie.nl
  * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Plugin constanten
 define('BAMBOOHR_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BAMBOOHR_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('BAMBOOHR_PLUGIN_VERSION', '1.2.4');
+define('BAMBOOHR_PLUGIN_VERSION', '1.2.5');
 
 class BambooHRApplicantSync {
 
@@ -190,8 +190,8 @@ class BambooHRApplicantSync {
     // ... (alle bestaande functies blijven hetzelfde tot add_admin_menu) ...
 
     public function enqueue_scripts() {
-        wp_enqueue_script('bamboohr-form', BAMBOOHR_PLUGIN_URL . 'assets/form-handler.js', array('jquery'), '1.0.0', true);
-        wp_enqueue_style('bamboohr-form', BAMBOOHR_PLUGIN_URL . 'assets/form-styles.css', array(), '1.0.0');
+        wp_enqueue_script('bamboohr-form', BAMBOOHR_PLUGIN_URL . 'assets/form-handler.js', array('jquery'), BAMBOOHR_PLUGIN_VERSION, true);
+        wp_enqueue_style('bamboohr-form', BAMBOOHR_PLUGIN_URL . 'assets/form-styles.css', array(), BAMBOOHR_PLUGIN_VERSION);
 
         // Localize script voor AJAX
         wp_localize_script('bamboohr-form', 'bamboohr_ajax', array(
@@ -419,7 +419,7 @@ class BambooHRApplicantSync {
         }
 
         // Try to sync with BambooHR
-        //$sync_result = $this->sync_with_bamboohr($local_id, $form_data);
+        $sync_result = $this->sync_with_bamboohr($local_id, $form_data);
 
         //if ($sync_result['success']) {
             wp_send_json_success('Thank you for your application');
@@ -676,7 +676,7 @@ class BambooHRApplicantSync {
         $vacancies = $wpdb->get_results("SELECT * FROM {$table_name} ORDER BY last_sync DESC");
 
         // Enqueue admin scripts
-        wp_enqueue_script('bamboohr-admin', BAMBOOHR_PLUGIN_URL . 'assets/admin.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('bamboohr-admin', BAMBOOHR_PLUGIN_URL . 'assets/admin.js', array('jquery'), BAMBOOHR_PLUGIN_VERSION, true);
         wp_localize_script('bamboohr-admin', 'bamboohr_admin_ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('bamboohr_admin_nonce')
