@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
         let $messages = $('#form-messages');
 
         // Required field validation
-        let requiredFields = ['firstName', 'lastName', 'email', 'dateAvailable', 'linkedinUrl'];
+        let requiredFields = ['firstName', 'lastName', 'email', 'resume'];
 
         requiredFields.forEach(function(fieldName) {
             var $field = $('#' + fieldName);

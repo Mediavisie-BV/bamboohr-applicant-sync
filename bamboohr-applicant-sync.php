@@ -3,7 +3,7 @@
  * Plugin Name: BambooHR Applicant Sync
  * Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
  * Description: Add an applicant form and sync with BambooHR, including job vacancy synchronization
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author: Jithran Sikken
  * Author URI: https://www.mediavisie.nl
  * GitHub Plugin URI: https://github.com/Mediavisie-BV/bamboohr-applicant-sync
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 // Plugin constanten
 define('BAMBOOHR_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BAMBOOHR_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('BAMBOOHR_PLUGIN_VERSION', '1.2.3');
+define('BAMBOOHR_PLUGIN_VERSION', '1.2.4');
 
 class BambooHRApplicantSync {
 
@@ -323,8 +323,8 @@ class BambooHRApplicantSync {
 
                 <!-- File Uploads -->
                 <div class="form-group">
-                    <label for="resume">Resume/CV (PDF, DOC, DOCX)</label>
-                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                    <label for="resume">Resume/CV (PDF, DOC, DOCX) *</label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
                 </div>
 
                 <div class="form-group">
@@ -334,8 +334,8 @@ class BambooHRApplicantSync {
 
                 <!-- Additional Information -->
                 <div class="form-group">
-                    <label for="dateAvailable">Date Available *</label>
-                    <input type="date" id="dateAvailable" name="dateAvailable" required>
+                    <label for="dateAvailable">Date Available</label>
+                    <input type="date" id="dateAvailable" name="dateAvailable">
                 </div>
 
                 <div class="form-group">
@@ -350,8 +350,8 @@ class BambooHRApplicantSync {
                 </div>
 
                 <div class="form-group">
-                    <label for="linkedinUrl">LinkedIn Profile URL *</label>
-                    <input type="url" id="linkedinUrl" name="linkedinUrl" placeholder="https://linkedin.com/in/" required>
+                    <label for="linkedinUrl">LinkedIn Profile URL</label>
+                    <input type="url" id="linkedinUrl" name="linkedinUrl" placeholder="https://linkedin.com/in/">
                 </div>
 
                 <div class="form-group">
@@ -419,7 +419,7 @@ class BambooHRApplicantSync {
         }
 
         // Try to sync with BambooHR
-        $sync_result = $this->sync_with_bamboohr($local_id, $form_data);
+        //$sync_result = $this->sync_with_bamboohr($local_id, $form_data);
 
         //if ($sync_result['success']) {
             wp_send_json_success('Thank you for your application');
@@ -483,25 +483,82 @@ class BambooHRApplicantSync {
             'state' => $data['state'],
             'zip' => $data['zip'],
             'country' => $data['country'],
-            'dateAvailable' => $data['date_available'],
             'desiredSalary' => $data['desired_salary'],
             'websiteUrl' => $data['website_url'],
-            'linkedinUrl' => $data['linkedin_url'],
             'source' => 'Website'
         );
+
+        if(!empty($data['linkedin_url'])) {
+            $api_data['linkedinUrl'] = $data['linkedin_url'];
+        }
+
+        if(!empty($data['date_available']) && $data['date_available'] !== '0000-00-00') {
+            $api_data['dateAvailable'] = $data['date_available'];
+        }
 
         // Voeg job_id toe als deze bestaat
         if (!empty($data['job_id'])) {
             $api_data['jobId'] = $data['job_id'];
         }
 
+        $boundary = wp_generate_password( 24 );
+        $payload = '';
+        // First, add the standard POST fields:
+        foreach ( $api_data as $name => $value ) {
+            $payload .= '--' . $boundary;
+            $payload .= "\r\n";
+            $payload .= 'Content-Disposition: form-data; name="' . $name .
+                '"' . "\r\n\r\n";
+            $payload .= $value;
+            $payload .= "\r\n";
+        }
+
+        $files = [
+                'resume' => 'resume_file',
+                'coverLetter' => 'cover_letter_file',
+        ];
+        // Upload the file
+        foreach($files AS $apiName => $fieldName) {
+            if ( !empty($data[$fieldName]) ) {
+                $data[$fieldName] = str_replace('localhost','host.docker.internal',$data[$fieldName]);
+                $wpremoteresponse = wp_remote_get($data[$fieldName]);
+                if (is_wp_error($wpremoteresponse)) {
+                    $this->update_sync_status($local_id, 'failed', $apiName . ' - ' . $wpremoteresponse->get_error_message());
+                    return array('success' => false, 'error' => $apiName . ' - ' . $wpremoteresponse->get_error_message());
+                }
+
+                $ext = pathinfo($data[$fieldName], PATHINFO_EXTENSION);
+                $mimetypes = wp_get_mime_types();
+                $mimetype = isset($mimetypes[$ext]) ? $mimetypes[$ext] : 'application/octet-stream';
+
+                $payload .= '--' . $boundary;
+                $payload .= "\r\n";
+                $payload .= 'Content-Disposition: form-data; name="' . $apiName .
+                    '"; filename="' . basename( $data[$fieldName] ) . '"' . "\r\n";
+                        $payload .= 'Content-Type: ' . $mimetype . "\r\n";
+                $payload .= "\r\n";
+                //$payload .= file_get_contents( $data[$fieldName] );
+                // get content from extrernal URL
+                $payload .= wp_remote_retrieve_body($wpremoteresponse);
+                $payload .= "\r\n";
+            }
+        }
+
+        $payload .= '--' . $boundary . '--';
+
+
+
+
+        //return array('success' => false, 'error' => $payload);
+
         // API call
         $response = wp_remote_post($url, array(
             'headers' => array(
                 'Authorization' => 'Basic ' . base64_encode($api_key . ':x'),
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'multipart/form-data; boundary=' . $boundary,
+                'Accept' => 'application/json',
             ),
-            'body' => json_encode($api_data),
+            'body' => $payload,
             'timeout' => 30
         ));
 
